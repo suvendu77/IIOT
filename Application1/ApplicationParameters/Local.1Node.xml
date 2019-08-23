@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="fabric:/Application1" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+  <Parameters>
+    <Parameter Name="Actor1ActorService_PartitionCount" Value="1" />
+    <Parameter Name="Actor1ActorService_TargetReplicaSetSize" Value="1" />
+    <Parameter Name="Actor1ActorService_MinReplicaSetSize" Value="1" />
+    <Parameter Name="ThingActorService_PartitionCount" Value="1" />
+    <Parameter Name="ThingActorService_TargetReplicaSetSize" Value="1" />
+    <Parameter Name="ThingActorService_MinReplicaSetSize" Value="1" />
+    <Parameter Name="LimitAlarmActorService_PartitionCount" Value="1" />
+    <Parameter Name="LimitAlarmActorService_TargetReplicaSetSize" Value="1" />
+    <Parameter Name="LimitAlarmActorService_MinReplicaSetSize" Value="1" />
+    <Parameter Name="AttributeActorService_PartitionCount" Value="1" />
+    <Parameter Name="AttributeActorService_TargetReplicaSetSize" Value="1" />
+    <Parameter Name="AttributeActorService_MinReplicaSetSize" Value="1" />
+    <Parameter Name="IOExtentionActorService_PartitionCount" Value="1" />
+    <Parameter Name="IOExtentionActorService_TargetReplicaSetSize" Value="1" />
+    <Parameter Name="IOExtentionActorService_MinReplicaSetSize" Value="1" />
+    <Parameter Name="SampleScriptActorService_PartitionCount" Value="1" />
+    <Parameter Name="SampleScriptActorService_TargetReplicaSetSize" Value="1" />
+    <Parameter Name="SampleScriptActorService_MinReplicaSetSize" Value="1" />
+    <Parameter Name="ScriptExpessionActorService_PartitionCount" Value="1" />
+    <Parameter Name="ScriptExpessionActorService_TargetReplicaSetSize" Value="1" />
+    <Parameter Name="ScriptExpessionActorService_MinReplicaSetSize" Value="1" />
+  </Parameters>
+</Application>
