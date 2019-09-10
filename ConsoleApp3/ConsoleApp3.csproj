@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -18,6 +18,7 @@
     <ProjectReference Include="..\Actor1.Interfaces\Actor1.Interfaces.csproj" />
     <ProjectReference Include="..\Application1\SampleScriptActor.Interfaces\SampleScriptActor.Interfaces.csproj" />
     <ProjectReference Include="..\Application1\Thing.Interfaces\Thing.Interfaces.csproj" />
+    <ProjectReference Include="..\SimulatedDevice\SimulatedDevice.csproj" />
   </ItemGroup>
 
 </Project>

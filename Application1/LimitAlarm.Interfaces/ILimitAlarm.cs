@@ -17,7 +17,7 @@ namespace LimitAlarm.Interfaces
     /// </summary>
     public interface ILimitAlarm : IActor
     {
-        Task ProcessEventAsync(DataQualityTimestamp payload);
+        Task ProcessEventAsync(string context, LimitAlarmDesc limitAlarm, double value);
         Task SetData(LimitAlarmData data);
         Task<LimitAlarmData> GetData();
     }

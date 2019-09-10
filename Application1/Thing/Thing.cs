@@ -23,8 +23,6 @@ namespace Thing
     [StatePersistence(StatePersistence.Persisted)]
     internal class Thing : Actor, IThing
     {
-        private Guid id;
-
         private const string MetadataState = "metadata";
 
 
@@ -52,7 +50,7 @@ namespace Thing
                 var metadata = new ThingMetaData()
                 {
                     ID = 1,
-                    Name = "Motor"
+                    Name = ""
                 };                
                 await StateManager.TryAddStateAsync(MetadataState, metadata);
             }
@@ -74,8 +72,8 @@ namespace Thing
             {
                 metadata.ThingMetaData = new ThingMetaData
                                         {
-                                            Name = "Motor",
-                                            ID = 1
+                                            Name = "",
+                                            ID = -1
                                         };
             }
 
@@ -87,13 +85,13 @@ namespace Thing
             return metadata;
         }
 
-        public async Task ProcessEventAsync(IEnumerable<AttributeRuntimeData> attributeRuntimeDatas)
+        public async Task<bool> ProcessEventAsync(IEnumerable<AttributeRuntimeData> attributeRuntimeDatas)
         {
             try
             {
                 if (attributeRuntimeDatas == null)
                 {
-                    return;
+                    return false;
                 }
 
                 var eventDataList = attributeRuntimeDatas as IList<AttributeRuntimeData> ?? attributeRuntimeDatas.ToList();
@@ -107,7 +105,7 @@ namespace Thing
                     }
 
                     // Invoke Device Actor
-                    var proxy = GetAttributeProxy(id + payload.Name);
+                    var proxy = GetAttributeProxy(Id + payload.Name);
                     if (proxy != null)
                     {
                         await proxy.ProcessEventAsync(payload.dqt);
@@ -121,12 +119,16 @@ namespace Thing
                 {
                     ActorEventSource.Current.Message(exception.Message);
                 }
+                return false;
             }
             catch (Exception ex)
             {
                 // Trace Exception
                 ActorEventSource.Current.Message(ex.Message);
+                return false;
             }
+
+            return true;
         }
 
         public async Task SetData(ThingData data)
@@ -141,7 +143,7 @@ namespace Thing
 
             foreach (var attributeData in data.AttributeDatas)
             {
-                var attribute = GetAttributeProxy(id +attributeData.AttributeMetaData.Name);
+                var attribute = GetAttributeProxy(Id +attributeData.AttributeMetaData.Name);
                 await attribute.SetData(attributeData);
             }
         }

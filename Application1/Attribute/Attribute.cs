@@ -10,6 +10,7 @@ using Attribute.Interfaces;
 using CommonEntity;
 using LimitAlarm.Interfaces;
 using IOExtention.Interfaces;
+using RabbitMQ.Client;
 
 namespace Attribute
 {
@@ -26,10 +27,14 @@ namespace Attribute
     {
         private const string MetadataState = "metadata";
 
+        private const string AlarmState = "alarmdata";
+
         private ILimitAlarm limitAlarmActor = null;
         private IIOExtention ioExtentionActor = null;
-       
 
+        private LimitAlarmData limitAlarmData = null;
+        private AttributeMetaData metadata = null;
+        private string context;
         /// <summary>
         /// Initializes a new instance of Attribute
         /// </summary>
@@ -54,6 +59,19 @@ namespace Attribute
                 var metadata = new AttributeMetaData();
                 await StateManager.TryAddStateAsync(MetadataState, metadata);
             }
+            else
+            {
+                metadata = result.Value;
+                this.context = metadata.Context;
+                if (metadata.IsLimitAlarms)
+                {
+                    var result1 = await StateManager.TryGetStateAsync<LimitAlarmData>(AlarmState);
+                    if (result1.HasValue)
+                    {
+                        this.limitAlarmData = result1.Value;
+                    }
+                }
+            }          
 
         }
 
@@ -85,18 +103,91 @@ namespace Attribute
             return metadata;
         }
 
-        public Task ProcessEventAsync(DataQualityTimestamp payload)
+        public async Task ProcessEventAsync(DataQualityTimestamp payload)
         {
-            throw new NotImplementedException();
+            ActorEventSource.Current.ActorMessage(this, payload.Value.ToString());
+           
+            if (metadata.IsLimitAlarms)
+            {
+                await ProcessLimitAlarms(payload.Value);
+            }            
+        }
+
+        private async Task ProcessLimitAlarms(double value)
+        {
+            
+               bool isAlarm = false;
+               LimitAlarmDesc limitAlarmDesc = null;
+               foreach (var limit in this.limitAlarmData.LimitAlarms)
+               {
+                   switch(limit.Key)
+                   {
+                       case AlarmCategoty.Lo:
+                           {
+                               if(value <= limit.Value.Value)
+                               {
+                                   limitAlarmDesc = limit.Value;
+                                   isAlarm = true;
+                               }
+                           }
+                           break;
+                       case AlarmCategoty.Lolo:
+                           {
+                               if (value <= limit.Value.Value)
+                               {
+                                limitAlarmDesc = limit.Value;
+                                isAlarm = true;
+                               }
+                           }
+                           break;
+                       case AlarmCategoty.Hi:
+                           {
+                               if (value >= limit.Value.Value)
+                               {
+                                limitAlarmDesc = limit.Value;
+                                isAlarm = true;
+                               }
+                           }
+                           break;
+                       case AlarmCategoty.HiHi:
+                           {
+                               if (value >= limit.Value.Value)
+                               {
+                                limitAlarmDesc = limit.Value;
+                                isAlarm = true;
+                               }
+                           }
+                           break;
+                   }
+               }
+
+               if(isAlarm)
+               {
+                   await SendAlarm(limitAlarmDesc, value);                   
+               }
+           
+        }
+
+        private async Task SendAlarm(LimitAlarmDesc limitAlarmDesc, double value)
+        {
+            if (limitAlarmDesc == null)
+            {
+                return;
+            }
+            ILimitAlarm alarmProcessor = GetlimitAlarmActorPoxy("AlarmProcessor");
+            await alarmProcessor.ProcessEventAsync(this.context, limitAlarmDesc, value);
         }
 
         public async Task SetData(AttributeData data)
         {
             await StateManager.SetStateAsync(MetadataState, data.AttributeMetaData);
-            if(data.AttributeMetaData.IsLimitAlarms)
+            metadata = data.AttributeMetaData;
+            if (data.AttributeMetaData.IsLimitAlarms)
             {
-                var limitAlarm = GetlimitAlarmActorPoxy(this.Id.ToString() + "_LimitAlarm");
-                await limitAlarm.SetData(data.AlamLimitData);
+                ////var limitAlarm = GetlimitAlarmActorPoxy(this.Id.ToString() + "_LimitAlarm");
+                ////await limitAlarm.SetData(data.AlamLimitData);
+               await StateManager.SetStateAsync(AlarmState, data.AlamLimitData);
+               this.limitAlarmData = data.AlamLimitData;
             }
 
             if (data.AttributeMetaData.IsIO)
@@ -106,6 +197,7 @@ namespace Attribute
             }
         }
 
+        
         private ILimitAlarm GetlimitAlarmActorPoxy(string actorID)
         {
             if(limitAlarmActor ==null)
@@ -115,6 +207,7 @@ namespace Attribute
 
             return limitAlarmActor;
         }
+        
 
         private IIOExtention GetIOExtentionActorPoxy(string actorID)
         {

@@ -7,7 +7,7 @@ namespace CommonEntity
     public class AttributeMetaData
     {
         public string Name { get; set; }
-
+        public string Context { get; set; }
         public string Description { get; set; }
 
         public DataType DataType { get; set; }

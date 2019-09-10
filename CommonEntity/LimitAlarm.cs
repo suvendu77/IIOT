@@ -10,10 +10,11 @@ namespace CommonEntity
         Lolo,
         Lo,
         HiHi,
-        Hi
+        Hi, 
+        None
     }
 
-    public class LimitAlarm
+    public class LimitAlarmDesc
     {     
         [JsonProperty(PropertyName = "AlarmCategoty", Order = 1)]      
         public AlarmCategoty AlarmCategoty;

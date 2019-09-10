@@ -6,7 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.ServiceFabric" Version="6.5.641" />
     <PackageReference Include="RabbitMQ.Client" Version="5.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SimulatedDevice\SimulatedDevice.csproj" />
+    <ProjectReference Include="..\Thing.Interfaces\Thing.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

@@ -8,6 +8,9 @@ using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Actors.Client;
 using LimitAlarm.Interfaces;
 using CommonEntity;
+using RabbitMQ.Client;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace LimitAlarm
 { 
@@ -24,6 +27,8 @@ namespace LimitAlarm
     public class LimitAlarm : Actor, ILimitAlarm
     {
         private const string MetadataState = "metadata";
+        IConnection connection;
+        IModel channel;
         /// <summary>
         /// Initializes a new instance of LimitAlarm
         /// </summary>
@@ -40,19 +45,43 @@ namespace LimitAlarm
         /// </summary>
         protected override async Task OnActivateAsync()
         {
-            ActorEventSource.Current.ActorMessage(this, "Actor activated.");
-            var result = await StateManager.TryGetStateAsync<LimitAlarmData>(MetadataState);
-            if (!result.HasValue)
+            await Task.Run(() =>
             {
-                var metadata = new LimitAlarmData();
-                await StateManager.TryAddStateAsync(MetadataState, metadata);
-            }
+
+                var factory = new ConnectionFactory() { HostName = "localhost" };
+                connection = factory.CreateConnection();
+                channel = connection.CreateModel();
+                channel.QueueDeclare(queue: "Alarm",
+                                    durable: false,
+                                    exclusive: false,
+                                    autoDelete: false,
+                                    arguments: null);
+            });
 
         }
 
-        public Task ProcessEventAsync(DataQualityTimestamp payload)
+        protected override async Task OnDeactivateAsync()
         {
-            throw new NotImplementedException();
+            await Task.Run(() =>
+            {               
+                connection.Close();
+                connection.Dispose();
+                channel.Close();
+                channel.Dispose();
+            });
+        }
+
+        public async Task ProcessEventAsync(string context, LimitAlarmDesc limitAlarm, double value)
+        {
+            await Task.Run(() =>
+            {
+                var alarm = new AlarmMessage(context, limitAlarm, value);
+                var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(alarm));
+                channel.BasicPublish(exchange: "",
+                                                routingKey: "Alarm",
+                                                basicProperties: null,
+                                                body: body);
+            });
         }
 
         public async Task SetData(LimitAlarmData data)

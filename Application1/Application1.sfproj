@@ -32,7 +32,6 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Actor1\Actor1.csproj" />
     <ProjectReference Include="Attribute\Attribute.csproj" />
     <ProjectReference Include="IOExtention\IOExtention.csproj" />
     <ProjectReference Include="LimitAlarm\LimitAlarm.csproj" />

@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="Application1Type" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Parameters>
-    <Parameter Name="Actor1ActorService_PartitionCount" DefaultValue="10" />
-    <Parameter Name="Actor1ActorService_MinReplicaSetSize" DefaultValue="3" />
-    <Parameter Name="Actor1ActorService_TargetReplicaSetSize" DefaultValue="3" />
     <Parameter Name="ThingActorService_PartitionCount" DefaultValue="10" />
     <Parameter Name="ThingActorService_MinReplicaSetSize" DefaultValue="3" />
     <Parameter Name="ThingActorService_TargetReplicaSetSize" DefaultValue="3" />
@@ -44,15 +41,7 @@
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="ThingPkg" ServiceManifestVersion="1.0.0" />
   </ServiceManifestImport>
-  <ServiceManifestImport>
-    <ServiceManifestRef ServiceManifestName="Actor1Pkg" ServiceManifestVersion="1.0.0" />
-  </ServiceManifestImport>
   <DefaultServices>
-    <Service Name="Actor1ActorService" GeneratedIdRef="80b3c181-2c8f-4896-9009-978455d84053|Persisted">
-      <StatefulService ServiceTypeName="Actor1ActorServiceType" TargetReplicaSetSize="[Actor1ActorService_TargetReplicaSetSize]" MinReplicaSetSize="[Actor1ActorService_MinReplicaSetSize]">
-        <UniformInt64Partition PartitionCount="[Actor1ActorService_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
-      </StatefulService>
-    </Service>
     <Service Name="ThingActorService" GeneratedIdRef="9febb787-0836-4a95-b554-a72befea2059|Persisted">
       <StatefulService ServiceTypeName="ThingActorServiceType" TargetReplicaSetSize="[ThingActorService_TargetReplicaSetSize]" MinReplicaSetSize="[ThingActorService_MinReplicaSetSize]">
         <UniformInt64Partition PartitionCount="[ThingActorService_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />

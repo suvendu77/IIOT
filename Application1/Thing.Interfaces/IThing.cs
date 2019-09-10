@@ -17,7 +17,7 @@ namespace Thing.Interfaces
     /// </summary>
     public interface IThing : IActor
     {
-        Task ProcessEventAsync(IEnumerable<AttributeRuntimeData> attributeRuntimeDatas);
+        Task<bool> ProcessEventAsync(IEnumerable<AttributeRuntimeData> attributeRuntimeDatas);
         Task SetData(ThingData data);
         Task<ThingData> GetData();
     }
