@@ -39,13 +39,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScriptExpessionActor", "Scr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScriptExpessionActor.Interfaces", "ScriptExpessionActor.Interfaces\ScriptExpessionActor.Interfaces.csproj", "{F17E73D4-F953-46D5-92B0-ECCD9DA9D581}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQPublisher", "RabbitMQPublisher\RabbitMQPublisher.csproj", "{8D9EA83F-3054-4B63-A6B0-3C12A1EA45AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQPublisher", "RabbitMQPublisher\RabbitMQPublisher.csproj", "{8D9EA83F-3054-4B63-A6B0-3C12A1EA45AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQReceiver", "RabbitMQReceiver\RabbitMQReceiver.csproj", "{FBD5DB0A-F55C-4AA2-B527-BB12CE789F7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQReceiver", "RabbitMQReceiver\RabbitMQReceiver.csproj", "{FBD5DB0A-F55C-4AA2-B527-BB12CE789F7B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RabbitMQ", "RabbitMQ", "{B5FDA2F9-9835-4822-9468-E4CB0217387A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulatedDevice", "..\SimulatedDevice\SimulatedDevice.csproj", "{3A871FF7-5D7E-4E15-A2ED-20F17F638D42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulatedDevice", "..\SimulatedDevice\SimulatedDevice.csproj", "{3A871FF7-5D7E-4E15-A2ED-20F17F638D42}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreHotData", "StoreHotData\StoreHotData.csproj", "{34775D99-B59C-4F61-8E24-D3CF188AE13E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreHotData.Interfaces", "StoreHotData.Interfaces\StoreHotData.Interfaces.csproj", "{C9ED7F1C-3D38-4E24-8A87-1D96CF9C23DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -223,6 +227,22 @@ Global
 		{3A871FF7-5D7E-4E15-A2ED-20F17F638D42}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3A871FF7-5D7E-4E15-A2ED-20F17F638D42}.Release|x64.ActiveCfg = Release|Any CPU
 		{3A871FF7-5D7E-4E15-A2ED-20F17F638D42}.Release|x64.Build.0 = Release|Any CPU
+		{34775D99-B59C-4F61-8E24-D3CF188AE13E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34775D99-B59C-4F61-8E24-D3CF188AE13E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34775D99-B59C-4F61-8E24-D3CF188AE13E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{34775D99-B59C-4F61-8E24-D3CF188AE13E}.Debug|x64.Build.0 = Debug|Any CPU
+		{34775D99-B59C-4F61-8E24-D3CF188AE13E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34775D99-B59C-4F61-8E24-D3CF188AE13E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34775D99-B59C-4F61-8E24-D3CF188AE13E}.Release|x64.ActiveCfg = Release|Any CPU
+		{34775D99-B59C-4F61-8E24-D3CF188AE13E}.Release|x64.Build.0 = Release|Any CPU
+		{C9ED7F1C-3D38-4E24-8A87-1D96CF9C23DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9ED7F1C-3D38-4E24-8A87-1D96CF9C23DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9ED7F1C-3D38-4E24-8A87-1D96CF9C23DE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C9ED7F1C-3D38-4E24-8A87-1D96CF9C23DE}.Debug|x64.Build.0 = Debug|Any CPU
+		{C9ED7F1C-3D38-4E24-8A87-1D96CF9C23DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9ED7F1C-3D38-4E24-8A87-1D96CF9C23DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9ED7F1C-3D38-4E24-8A87-1D96CF9C23DE}.Release|x64.ActiveCfg = Release|Any CPU
+		{C9ED7F1C-3D38-4E24-8A87-1D96CF9C23DE}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -19,10 +19,16 @@
     <Parameter Name="ScriptExpessionActorService_PartitionCount" DefaultValue="10" />
     <Parameter Name="ScriptExpessionActorService_MinReplicaSetSize" DefaultValue="3" />
     <Parameter Name="ScriptExpessionActorService_TargetReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="StoreHotDataActorService_PartitionCount" DefaultValue="10" />
+    <Parameter Name="StoreHotDataActorService_MinReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="StoreHotDataActorService_TargetReplicaSetSize" DefaultValue="3" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
        ServiceManifest.xml file. -->
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="StoreHotDataPkg" ServiceManifestVersion="1.0.0" />
+  </ServiceManifestImport>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="ScriptExpessionActorPkg" ServiceManifestVersion="1.0.0" />
   </ServiceManifestImport>
@@ -70,6 +76,11 @@
     <Service Name="ScriptExpessionActorService" GeneratedIdRef="747c6459-0eab-4bc3-9ecb-2271021c3059|Persisted">
       <StatefulService ServiceTypeName="ScriptExpessionActorServiceType" TargetReplicaSetSize="[ScriptExpessionActorService_TargetReplicaSetSize]" MinReplicaSetSize="[ScriptExpessionActorService_MinReplicaSetSize]">
         <UniformInt64Partition PartitionCount="[ScriptExpessionActorService_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
+      </StatefulService>
+    </Service>
+    <Service Name="StoreHotDataActorService" GeneratedIdRef="16cdb058-ac1c-4613-8d78-5c9392b26999|Volatile">
+      <StatefulService ServiceTypeName="StoreHotDataActorServiceType" TargetReplicaSetSize="[StoreHotDataActorService_TargetReplicaSetSize]" MinReplicaSetSize="[StoreHotDataActorService_MinReplicaSetSize]">
+        <UniformInt64Partition PartitionCount="[StoreHotDataActorService_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
       </StatefulService>
     </Service>
     <!-- The section below creates instances of service types, when an instance of this 

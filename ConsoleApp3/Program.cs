@@ -32,9 +32,9 @@ namespace ConsoleApp3
 
                 var attributeList = new List<AttributeData>();
                 chillerConfigData.AttributeDatas = attributeList;
-                AddAttribute(attributeList, "Temperature", chillerConfigData.ThingMetaData.Name + "Temperature", "Temperature", DataType.Double, "F", 0, CreateTempLimitData());
-                AddAttribute(attributeList, "Humidity", chillerConfigData.ThingMetaData.Name + "Humidity", "Humidity", DataType.Double, "%", 0, CreateHumidityLimitData());
-                AddAttribute(attributeList, "Pressure", chillerConfigData.ThingMetaData.Name + "Humidity", "Pressure", DataType.Double, "psi", 0, CreatePresureLimitData());
+                AddAttribute(attributeList, chillerConfigData.ThingMetaData.Name, "Temperature", chillerConfigData.ThingMetaData.Name + "Temperature", "Temperature", DataType.Double, "F", 0, CreateTempLimitData());
+                AddAttribute(attributeList, chillerConfigData.ThingMetaData.Name, "Humidity", chillerConfigData.ThingMetaData.Name + "Humidity", "Humidity", DataType.Double, "%", 0, CreateHumidityLimitData());
+                AddAttribute(attributeList, chillerConfigData.ThingMetaData.Name, "Pressure", chillerConfigData.ThingMetaData.Name + "Humidity", "Pressure", DataType.Double, "psi", 0, CreatePresureLimitData());
                 IThing actor1 = ActorProxy.Create<IThing>(new ActorId(chillerConfigData.ThingMetaData.ID), new Uri("fabric:/Application1/ThingActorService"));
                 actor1.SetData(chillerConfigData);
                 things[i - 1] = actor1;
@@ -87,7 +87,7 @@ namespace ConsoleApp3
             ////}
         }
 
-        private static void AddAttribute(List<AttributeData> attributeList, 
+        private static void AddAttribute(List<AttributeData> attributeList,string thingName, 
             string name, string context, string description, DataType type, string unit,object initialValue,
             List<LimitAlarmDesc> limits
             )
@@ -97,6 +97,7 @@ namespace ConsoleApp3
                 AttributeMetaData = new AttributeMetaData()
                 {
                     Name = name,
+                    NameSpace = thingName + "." + name,
                     Context = context,
                     Description = description,
                     DataType = type,

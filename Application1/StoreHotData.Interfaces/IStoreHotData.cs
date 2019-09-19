@@ -9,16 +9,14 @@ using Microsoft.ServiceFabric.Actors.Remoting.FabricTransport;
 using Microsoft.ServiceFabric.Services.Remoting;
 
 [assembly: FabricTransportActorRemotingProvider(RemotingListenerVersion = RemotingListenerVersion.V2_1, RemotingClientVersion = RemotingClientVersion.V2_1)]
-namespace LimitAlarm.Interfaces
+namespace StoreHotData.Interfaces
 {
     /// <summary>
     /// This interface defines the methods exposed by an actor.
     /// Clients use this interface to interact with the actor that implements it.
     /// </summary>
-    public interface ILimitAlarm : IActor
+    public interface IStoreHotData : IActor
     {
-        Task ProcessEventAsync(string context, LimitAlarmDesc limitAlarm, DataQualityTimestamp dtq);
-        Task SetData(LimitAlarmData data);
-        Task<LimitAlarmData> GetData();
+        Task StoreData(string key, DataQualityTimestamp value);
     }
 }

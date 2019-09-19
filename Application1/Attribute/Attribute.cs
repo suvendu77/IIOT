@@ -11,6 +11,7 @@ using CommonEntity;
 using LimitAlarm.Interfaces;
 using IOExtention.Interfaces;
 using RabbitMQ.Client;
+using StoreHotData.Interfaces;
 
 namespace Attribute
 {
@@ -31,7 +32,10 @@ namespace Attribute
 
         private ILimitAlarm limitAlarmActor = null;
         private IIOExtention ioExtentionActor = null;
-
+        private IStoreHotData storeHotDataActor = null;
+        private int numberOfStoreHotDataActor = 25;
+        private int numberOflimitAlarmActor = 5;
+        private string HotDataStorePoxyID = string.Empty;
         private LimitAlarmData limitAlarmData = null;
         private AttributeMetaData metadata = null;
         private string context;
@@ -103,79 +107,104 @@ namespace Attribute
             return metadata;
         }
 
-        public async Task ProcessEventAsync(DataQualityTimestamp payload)
+        public async Task ProcessEventAsync(DataQualityTimestamp dtq)
         {
-            ActorEventSource.Current.ActorMessage(this, payload.Value.ToString());
-           
+            ActorEventSource.Current.ActorMessage(this, dtq.Value.ToString());
+            ////processing alarm
             if (metadata.IsLimitAlarms)
             {
-                await ProcessLimitAlarms(payload.Value);
-            }            
+                await ProcessLimitAlarms(dtq);
+            }
+            //// storing last value
+            await StoreHotData(dtq);
         }
-
-        private async Task ProcessLimitAlarms(double value)
+        private async Task StoreHotData(DataQualityTimestamp dtq)
         {
-            
-               bool isAlarm = false;
-               LimitAlarmDesc limitAlarmDesc = null;
-               foreach (var limit in this.limitAlarmData.LimitAlarms)
-               {
-                   switch(limit.Key)
-                   {
-                       case AlarmCategoty.Lo:
-                           {
-                               if(value <= limit.Value.Value)
-                               {
-                                   limitAlarmDesc = limit.Value;
-                                   isAlarm = true;
-                               }
-                           }
-                           break;
-                       case AlarmCategoty.Lolo:
-                           {
-                               if (value <= limit.Value.Value)
-                               {
-                                limitAlarmDesc = limit.Value;
-                                isAlarm = true;
-                               }
-                           }
-                           break;
-                       case AlarmCategoty.Hi:
-                           {
-                               if (value >= limit.Value.Value)
-                               {
-                                limitAlarmDesc = limit.Value;
-                                isAlarm = true;
-                               }
-                           }
-                           break;
-                       case AlarmCategoty.HiHi:
-                           {
-                               if (value >= limit.Value.Value)
-                               {
-                                limitAlarmDesc = limit.Value;
-                                isAlarm = true;
-                               }
-                           }
-                           break;
-                   }
-               }
-
-               if(isAlarm)
-               {
-                   await SendAlarm(limitAlarmDesc, value);                   
-               }
-           
+            string nameSpace = this.metadata.NameSpace;
+            if(string.IsNullOrEmpty(HotDataStorePoxyID))
+            {
+                HotDataStorePoxyID = HashFunction(nameSpace, numberOfStoreHotDataActor).ToString();
+            }
+            IStoreHotData dataConnection = GetStroreHotDataActorPoxy(HotDataStorePoxyID);
+            await dataConnection.StoreData(nameSpace, dtq);
         }
 
-        private async Task SendAlarm(LimitAlarmDesc limitAlarmDesc, double value)
+        static int HashFunction(string s, int number)
+        {
+            int total = 0;
+            char[] c;
+            c = s.ToCharArray();
+
+            // Summing up all the ASCII values  
+            // of each alphabet in the string 
+            for (int k = 0; k <= c.GetUpperBound(0); k++)
+                total += (int)c[k];
+
+            return total % number;
+        }
+
+        private async Task ProcessLimitAlarms(DataQualityTimestamp dtq)
+        {
+            double value = dtq.Value;
+            bool isAlarm = false;
+            LimitAlarmDesc limitAlarmDesc = null;
+            foreach (var limit in this.limitAlarmData.LimitAlarms)
+            {
+                switch(limit.Key)
+                {
+                    case AlarmCategoty.Lo:
+                        {
+                            if(value <= limit.Value.Value)
+                            {
+                                limitAlarmDesc = limit.Value;
+                                isAlarm = true;
+                            }
+                        }
+                        break;
+                    case AlarmCategoty.Lolo:
+                        {
+                            if (value <= limit.Value.Value)
+                            {
+                            limitAlarmDesc = limit.Value;
+                            isAlarm = true;
+                            }
+                        }
+                        break;
+                    case AlarmCategoty.Hi:
+                        {
+                            if (value >= limit.Value.Value)
+                            {
+                            limitAlarmDesc = limit.Value;
+                            isAlarm = true;
+                            }
+                        }
+                        break;
+                    case AlarmCategoty.HiHi:
+                        {
+                            if (value >= limit.Value.Value)
+                            {
+                            limitAlarmDesc = limit.Value;
+                            isAlarm = true;
+                            }
+                        }
+                        break;
+                }
+            }
+
+            if(isAlarm)
+            {
+                await SendAlarm(limitAlarmDesc, dtq);                   
+            }           
+        }
+
+        private async Task SendAlarm(LimitAlarmDesc limitAlarmDesc, DataQualityTimestamp dtq)
         {
             if (limitAlarmDesc == null)
             {
                 return;
             }
             ILimitAlarm alarmProcessor = GetlimitAlarmActorPoxy("AlarmProcessor");
-            await alarmProcessor.ProcessEventAsync(this.context, limitAlarmDesc, value);
+            await alarmProcessor.ProcessEventAsync(this.context, limitAlarmDesc, dtq);
         }
 
         public async Task SetData(AttributeData data)
@@ -217,6 +246,16 @@ namespace Attribute
             }
 
             return ioExtentionActor;
+        }
+
+        private IStoreHotData GetStroreHotDataActorPoxy(string actorID)
+        {
+            if (storeHotDataActor == null)
+            {
+                storeHotDataActor = ActorProxy.Create<IStoreHotData>(new ActorId(actorID), new Uri("fabric:/Application1/StoreHotDataActorService"));
+            }
+
+            return storeHotDataActor;
         }
 
     }

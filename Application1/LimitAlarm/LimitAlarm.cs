@@ -71,11 +71,11 @@ namespace LimitAlarm
             });
         }
 
-        public async Task ProcessEventAsync(string context, LimitAlarmDesc limitAlarm, double value)
+        public async Task ProcessEventAsync(string context, LimitAlarmDesc limitAlarm, DataQualityTimestamp dtq)
         {
             await Task.Run(() =>
             {
-                var alarm = new AlarmMessage(context, limitAlarm, value);
+                var alarm = new AlarmMessage(context, limitAlarm, dtq);
                 var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(alarm));
                 channel.BasicPublish(exchange: "",
                                                 routingKey: "Alarm",

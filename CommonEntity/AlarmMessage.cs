@@ -6,18 +6,20 @@ namespace CommonEntity
 {
     public class AlarmMessage
     {
-        public AlarmMessage(string context, LimitAlarmDesc alarm, double value)
+        public AlarmMessage(string context, LimitAlarmDesc alarm, DataQualityTimestamp dtq)
         {
             Context = context;
-            Value = value;
+            Value = dtq.Value;
             Categoty = alarm.AlarmCategoty;
             Piority = alarm.Piority;
             Message = alarm.Message;
+            Timestamp = dtq.Timestamp;
         }
         public string Context { get; set; }
         public double Value { get; set; }
         public AlarmCategoty Categoty { get; set; }
         public int Piority { get; set; }
         public string Message { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }

@@ -15,13 +15,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ServiceFabric.Actors" Version="3.4.641" />
-    <PackageReference Include="RabbitMQ.Client" Version="5.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="StackExchange.Redis" Version="2.0.601" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Attribute.Interfaces\Attribute.Interfaces.csproj" />
-    <ProjectReference Include="..\IOExtention.Interfaces\IOExtention.Interfaces.csproj" />
-    <ProjectReference Include="..\LimitAlarm.Interfaces\LimitAlarm.Interfaces.csproj" />
     <ProjectReference Include="..\StoreHotData.Interfaces\StoreHotData.Interfaces.csproj" />
   </ItemGroup>
 

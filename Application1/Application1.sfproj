@@ -37,6 +37,7 @@
     <ProjectReference Include="LimitAlarm\LimitAlarm.csproj" />
     <ProjectReference Include="SampleScriptActor\SampleScriptActor.csproj" />
     <ProjectReference Include="ScriptExpessionActor\ScriptExpessionActor.csproj" />
+    <ProjectReference Include="StoreHotData\StoreHotData.csproj" />
     <ProjectReference Include="Thing\Thing.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
